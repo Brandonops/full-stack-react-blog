@@ -1,6 +1,8 @@
 import { Button, Grid, Paper, TextField } from '@material-ui/core';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/actions';
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -8,6 +10,7 @@ export default function Login() {
     password: '',
   });
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,6 +30,7 @@ export default function Login() {
           alert(data.error);
         } else {
           alert('User Logged In Successfully');
+          dispatch(setUser(data));
           history.push('/');
         }
       });
@@ -62,7 +66,7 @@ export default function Login() {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit">Register</Button>
+            <Button type="submit">Login</Button>
           </Grid>
         </Grid>
       </form>
