@@ -1,3 +1,29 @@
+import { useEffect, useState } from 'react';
+import { Paper } from '@material-ui/core';
+
 export default function Home() {
-  return <div>Homepage!</div>;
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/v1/posts')
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h1>A1 Best React Blog</h1>
+      {posts.map((post) => {
+        return (
+          <Paper elevation={4} style={{ marginBottom: '2em' }}>
+            <h2>{post.title}</h2>
+            <h4>{post.User.username}</h4>
+            <p>{post.content}</p>
+          </Paper>
+        );
+      })}
+    </div>
+  );
 }

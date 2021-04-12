@@ -15,6 +15,7 @@ import Menu from '@material-ui/icons/Menu';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './redux/actions';
 import { useEffect } from 'react';
+import Blog from './pages/Blog';
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -83,6 +84,9 @@ function App() {
           </Route>
           <Route path="/register">
             <Register />
+          </Route>
+          <Route path="/blog">
+            <Blog />
           </Route>
         </Switch>
       </Container>
