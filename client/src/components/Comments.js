@@ -1,10 +1,12 @@
 import { Button, TextField } from '@material-ui/core';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function Comments(props) {
   const [showForm, setShowForm] = useState(false);
   const [text, setText] = useState('');
   const [comments, setComments] = useState([]);
+  const user = useSelector((state) => state.user);
 
   const getComments = () => {
     fetch(`/api/v1/posts/${props.postId}/comments`)
@@ -51,37 +53,39 @@ export default function Comments(props) {
           return (
             <div>
               <p>{comment.text}</p>
-              <h6>{comment.UserId}</h6>
+              <h6>{comment.User.username}</h6>
             </div>
           );
         })}
       </div>
-      <div>
-        {showForm ? (
-          <form onSubmit={handleSubmit}>
-            <TextField
-              label="Comment"
-              type="text"
-              fullWidth
-              onChange={(e) => setText(e.target.value)}
-              value={text}
-              required
-            />
-            <br />
-            <Button type="submit" variant="contained" color="primary">
-              Submit
+      {user && (
+        <div>
+          {showForm ? (
+            <form onSubmit={handleSubmit}>
+              <TextField
+                label="Comment"
+                type="text"
+                fullWidth
+                onChange={(e) => setText(e.target.value)}
+                value={text}
+                required
+              />
+              <br />
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
+            </form>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setShowForm(!showForm)}
+            >
+              Add Comment
             </Button>
-          </form>
-        ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setShowForm(!showForm)}
-          >
-            Add Comment
-          </Button>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
