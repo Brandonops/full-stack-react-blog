@@ -14,6 +14,7 @@ import {
 import Menu from '@material-ui/icons/Menu';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './redux/actions';
+import { useEffect } from 'react';
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -31,6 +32,16 @@ function App() {
         }
       });
   };
+
+  useEffect(() => {
+    fetch('/api/v1/users/current')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          dispatch(setUser(data));
+        }
+      });
+  }, [dispatch]);
 
   return (
     <div className="App">
