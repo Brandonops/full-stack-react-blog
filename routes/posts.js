@@ -32,4 +32,42 @@ router.post('/', checkAuth, async (req, res) => {
   res.status(201).json(post);
 });
 
+router.post('/:id/comments', checkAuth, async (req, res) => {
+  const post = await models.Post.findByPk(req.params.id);
+  if (!post) {
+    res.status(404).json({
+      error: 'Could not find post with that id',
+    });
+  }
+
+  if (!req.body.text) {
+    res.status(400).json({
+      error: 'please include all required fields',
+    });
+  }
+
+  const comment = await post.createComment({
+    text: req.body.text,
+    PostId: req.params.id,
+    UserId: req.session.user.id,
+  });
+
+  res.status(201).json(comment);
+});
+
+router.get('/:id/comments', async (req, res) => {
+  const post = await models.Post.findByPk(req.params.id);
+  if (!post) {
+    res.status(404).json({
+      error: 'Could not find post with that id',
+    });
+  }
+
+  const comments = await post.getComments({
+    include: [{ model: models.User, attributes: ['username', 'id'] }],
+  });
+
+  res.json(comments);
+});
+
 module.exports = router;

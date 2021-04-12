@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Paper } from '@material-ui/core';
+import Comments from '../components/Comments';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -17,10 +18,11 @@ export default function Home() {
       <h1>A1 Best React Blog</h1>
       {posts.map((post) => {
         return (
-          <Paper elevation={4} style={{ marginBottom: '2em' }}>
+          <Paper key={post.id} elevation={4} style={{ marginBottom: '2em' }}>
             <h2>{post.title}</h2>
             <h4>{post.User.username}</h4>
             <p>{post.content}</p>
+            <Comments postId={post.id} />
           </Paper>
         );
       })}
