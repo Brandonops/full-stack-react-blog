@@ -14,13 +14,15 @@ import {
 import Menu from '@material-ui/icons/Menu';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './redux/actions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Blog from './pages/Blog';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const history = useHistory();
+  const [userStatus, setUserStatus] = useState('LOADING');
 
   const logout = () => {
     fetch('/api/v1/users/logout')
@@ -41,6 +43,7 @@ function App() {
         if (!data.error) {
           dispatch(setUser(data));
         }
+        setUserStatus('CHECKED');
       });
   }, [dispatch]);
 
@@ -74,22 +77,25 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      <Container style={{ margin: '2em auto' }}>
-        <Switch>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/register">
-            <Register />
-          </Route>
-          <Route path="/blog">
-            <Blog />
-          </Route>
-        </Switch>
-      </Container>
+      {userStatus === 'LOADING' && 'Loading...'}
+      {userStatus === 'CHECKED' && (
+        <Container style={{ margin: '2em auto' }}>
+          <Switch>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/register">
+              <Register />
+            </Route>
+            <ProtectedRoute path="/blog">
+              <Blog />
+            </ProtectedRoute>
+          </Switch>
+        </Container>
+      )}
     </div>
   );
 }
